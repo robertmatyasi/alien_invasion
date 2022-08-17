@@ -33,12 +33,12 @@ class Settings:
             self.diff_multiplier = 1
         elif difficulty == 'medium':
             print('medium')
-            self.speedup_scale = 1.3
-            self.diff_multiplier = 1.5
+            self.speedup_scale = 1.2
+            self.diff_multiplier = 1.3
         elif difficulty == 'hard':
             print('hard')
-            self.speedup_scale = 1.5
-            self.diff_multiplier = 2
+            self.speedup_scale = 1.3
+            self.diff_multiplier = 1.5
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
