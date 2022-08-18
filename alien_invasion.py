@@ -261,7 +261,7 @@ class AlienInvasion:
         self.settings.fleet_direction *= -1
 
     def _draw_difficulty_buttons(self):
-        """Place difficulty buttons on the bottomright."""
+        """Place difficulty buttons below play button."""
         self.easy_button.draw_button()
         self.medium_button.draw_button()
         self.hard_button.draw_button()
