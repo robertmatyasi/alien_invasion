@@ -59,6 +59,8 @@ class AlienInvasion:
         self.stats.reset_stats()
         self.stats.game_active = True
         self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
 
         # Get rid of any remaining aliens and bullets.
         self.aliens.empty()
@@ -154,18 +156,24 @@ class AlienInvasion:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
+            self.sb.check_high_score()
 
         if not self.aliens:
             # Destroy existing bullets and create new fleet.
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            # Increase level.
+            self.stats.level += 1
+            self.sb.prep_level()
     
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
         if self.stats.ships_left > 0:
-            # Decrement ships left.
+            # Decrement ships left, and update scoreboard.
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
 
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
@@ -248,12 +256,15 @@ class AlienInvasion:
         self.settings.fleet_direction *= -1
 
     def _draw_difficulty_buttons(self):
-        """Place difficulty buttons on the topleft."""
-        self.easy_button.draw_button('topleft')
-        self.medium_button.draw_button('topleft')
-        self.hard_button.draw_button('topleft')
-        self.medium_button.rect.topleft = self.easy_button.rect.topright
+        """Place difficulty buttons on the bottomright."""
+        self.easy_button.draw_button()
+        self.medium_button.draw_button()
+        self.hard_button.draw_button()
+        self.medium_button.rect.top = (self.play_button.rect.bottom 
+            + 2 * self.play_button.height)
         self.medium_button.msg_image_rect.center = self.medium_button.rect.center
+        self.easy_button.rect.topright = self.medium_button.rect.topleft
+        self.easy_button.msg_image_rect.center = self.easy_button.rect.center
         self.hard_button.rect.topleft = self.medium_button.rect.topright
         self.hard_button.msg_image_rect.center = self.hard_button.rect.center
 
@@ -270,7 +281,7 @@ class AlienInvasion:
 
         # Draw the play and difficulty buttons if the game is inactive.
         if not self.stats.game_active:
-            self.play_button.draw_button('center')
+            self.play_button.draw_button()
             self._draw_difficulty_buttons()
 
         pygame.display.flip()
