@@ -31,17 +31,14 @@ class Settings:
         """Game difficulty"""
         # How quickly the game speeds up and game speed multiplier
         if difficulty == 'easy':
-            print('easy')
             self.speedup_scale = 1.1
             self.diff_multiplier = 1
         elif difficulty == 'medium':
-            print('medium')
             self.speedup_scale = 1.2
-            self.diff_multiplier = 1.3
+            self.diff_multiplier = 1.4
         elif difficulty == 'hard':
-            print('hard')
             self.speedup_scale = 1.3
-            self.diff_multiplier = 1.5
+            self.diff_multiplier = 1.6
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
