@@ -1,5 +1,6 @@
 import pygame.font
 from pygame.sprite import Group
+import json
 
 from ship import Ship
 
@@ -27,7 +28,8 @@ class Scoreboard:
     def prep_score(self):
         """Turn the score into a rendered image."""
         rounded_score = round(self.stats.score, -1)
-        score_str = "{:,}".format(rounded_score)
+        score_str = "Score: "
+        score_str += "{:,}".format(rounded_score)
         self.score_image = self.font.render(score_str, True,
                 self.text_color, self.settings.bg_color)
 
@@ -39,7 +41,8 @@ class Scoreboard:
     def prep_high_score(self):
         """Turn the high score into a rendered image."""
         high_score = round(self.stats.high_score, -1)
-        high_score_str = "{:,}".format(high_score)
+        high_score_str = "High Score: "
+        high_score_str += "{:,}".format(high_score)
         self.high_score_image = self.font.render(high_score_str, True,
                 self.text_color, self.settings.bg_color)
 
@@ -50,7 +53,8 @@ class Scoreboard:
 
     def prep_level(self):
         """Turn the level into a rendered image."""
-        level_str = str(self.stats.level)
+        level_str = "Level: "
+        level_str += str(self.stats.level)
         self.level_image = self.font.render(level_str, True,
         self.text_color, self.settings.bg_color)
 
@@ -73,6 +77,25 @@ class Scoreboard:
         if self.stats.score > self.stats.high_score:
             self.stats.high_score = self.stats.score
             self.prep_high_score()
+
+    def save_high_score(self):
+        """Saves high score into a file."""
+        filename = 'high_score.json'
+        with open(filename, 'w') as f:
+            json.dump(self.stats.high_score, f)
+
+    def load_high_score(self):
+        """Loads high score from a file."""
+        filename = 'high_score.json'
+        try:
+            with open(filename) as f:
+                self.saved_high_score = json.load(f)
+        except FileNotFoundError:
+            return None
+        else:
+            self.stats.high_score = self.saved_high_score
+            self.prep_high_score()
+            print("High score")
 
     def show_score(self):
         """Draw the scores, lelvel, and ships to the screen."""

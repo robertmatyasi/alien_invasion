@@ -42,7 +42,9 @@ class AlienInvasion:
         self.hard_button = Button(self, "Hard", 'gray')
 
     def run_game(self):
-        """Start the main loop for the game."""
+        """Start the main loop for the game and load high score."""
+        # Load high score
+        self.sb.load_high_score()
         while True:
             self._check_events()
 
@@ -77,6 +79,7 @@ class AlienInvasion:
         """Respond to keypresses and mouse events."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.sb.save_high_score()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -114,6 +117,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
+            self.sb.save_high_score()
             sys.exit()
         elif event.key == pygame.K_p and not self.stats.game_active:
                 self._start_game()
