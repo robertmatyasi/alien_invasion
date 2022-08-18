@@ -1,6 +1,5 @@
 import pygame.font
 from pygame.sprite import Group
-import json
 
 from ship import Ship
 
@@ -77,25 +76,6 @@ class Scoreboard:
         if self.stats.score > self.stats.high_score:
             self.stats.high_score = self.stats.score
             self.prep_high_score()
-
-    def save_high_score(self):
-        """Saves high score into a file."""
-        filename = 'high_score.json'
-        with open(filename, 'w') as f:
-            json.dump(self.stats.high_score, f)
-
-    def load_high_score(self):
-        """Loads high score from a file."""
-        filename = 'high_score.json'
-        try:
-            with open(filename) as f:
-                self.saved_high_score = json.load(f)
-        except FileNotFoundError:
-            return None
-        else:
-            self.stats.high_score = self.saved_high_score
-            self.prep_high_score()
-            print("High score")
 
     def show_score(self):
         """Draw the scores, lelvel, and ships to the screen."""

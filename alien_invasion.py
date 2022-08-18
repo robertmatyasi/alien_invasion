@@ -43,8 +43,6 @@ class AlienInvasion:
 
     def run_game(self):
         """Start the main loop for the game and load high score."""
-        # Load high score
-        self.sb.load_high_score()
         while True:
             self._check_events()
 
@@ -117,7 +115,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
-            self.sb.save_high_score()
+            self.stats.save_high_score()
             sys.exit()
         elif event.key == pygame.K_p and not self.stats.game_active:
                 self._start_game()
@@ -162,15 +160,20 @@ class AlienInvasion:
             self.sb.prep_score()
             self.sb.check_high_score()
 
-        if not self.aliens:
-            # Destroy existing bullets and create new fleet.
-            self.bullets.empty()
-            self._create_fleet()
-            self.settings.increase_speed()
+        # Start new level when fleet is destroyed.
 
-            # Increase level.
-            self.stats.level += 1
-            self.sb.prep_level()
+        if not self.aliens:
+            self._start_new_level()
+
+    def _start_new_level(self):     
+        """Destroy existing bullets and create new fleet."""
+        self.bullets.empty()
+        self._create_fleet()
+        self.settings.increase_speed()
+
+        # Increase level.
+        self.stats.level += 1
+        self.sb.prep_level()
     
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
