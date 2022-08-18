@@ -31,8 +31,6 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
 
-        self._create_fleet()
-
         # Make the play button.
         self.play_button = Button(self, "Play")
 
@@ -262,8 +260,8 @@ class AlienInvasion:
 
     def _draw_difficulty_buttons(self):
         """Place difficulty buttons below play button."""
-        self.easy_button.draw_button()
         self.medium_button.draw_button()
+        self.easy_button.draw_button()
         self.hard_button.draw_button()
         self.medium_button.rect.top = (self.play_button.rect.bottom 
             + 2 * self.play_button.height)
