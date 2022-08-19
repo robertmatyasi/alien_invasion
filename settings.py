@@ -28,9 +28,6 @@ class Settings:
         # How quickly the alien point values increase
         self.score_scale = 1.5
 
-        # How quickly alien bullets appear
-        self.alien_bullet_scale = 0.9
-
         self.set_difficulty('easy')
 
         self.initialize_dynamic_settings()
@@ -68,5 +65,6 @@ class Settings:
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
         self.alien_bullet_speed *= self.speedup_scale
-        self.alien_bullet_delay *= self.alien_bullet_scale
         self.alien_points = int(self.alien_points * self.score_scale)
+        self.alien_bullet_delay /= self.speedup_scale
+        self.alien_bullet_delay = int(self.alien_bullet_delay)
