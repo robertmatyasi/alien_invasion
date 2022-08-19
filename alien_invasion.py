@@ -296,6 +296,15 @@ class AlienInvasion:
         self.hard_button.rect.topleft = self.medium_button.rect.topright
         self.hard_button.msg_image_rect.center = self.hard_button.rect.center
 
+    def _draw_title(self):
+        """Place game title above buttons."""
+        self.title_img = pygame.image.load('images/title.bmp')
+        self.title_img_rect = self.title_img.get_rect()
+        self.title_img_rect.center = self.screen.get_rect().center
+        self.title_img_rect.bottom = (
+            self.play_button.rect.top - 2 * self.play_button.height)
+        self.screen.blit(self.title_img, self.title_img_rect)
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
@@ -308,6 +317,9 @@ class AlienInvasion:
         self.sb.show_score()
 
         # Draw title.
+        if not self.stats.game_active:
+            self._draw_title()
+
         if not self.stats.game_active:
                   # Play theme song
             while pygame.mixer.get_busy() == False:
