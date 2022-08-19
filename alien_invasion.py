@@ -35,12 +35,11 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
-        
         self.alien_bullets = pygame.sprite.Group()
-        self.alien_bullet_event = pygame.USEREVENT + 1
-        pygame.time.set_timer(
-            self.alien_bullet_event, self.settings.alien_bullet_delay)
 
+        # Timed event for alien bullets firing.
+        self.alien_bullet_event = pygame.USEREVENT + 1
+        
         # Make the play button.
         self.play_button = Button(self, "Play")
 
@@ -81,14 +80,25 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.center_ship()
 
+        # Aliens start firing at intervals
+        self._alien_bullet_timer()
+
         # Hide the mouse cursor.
         pygame.mouse.set_visible(False)
 
         # Stop theme song.
         sounds.theme_song.stop()
 
+    def _alien_bullet_timer(self):
+        pygame.time.set_timer(
+            self.alien_bullet_event, self.settings.alien_bullet_delay)
+        
     def _check_events(self):
-        """Respond to keypresses and mouse events."""
+        """
+        Respond to keypresses and mouse events.
+        Respond to timed events.
+        """
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.stats.save_high_score()
@@ -101,9 +111,9 @@ class AlienInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
                 self._check_difficulty_buttons(mouse_pos)
-            elif event.type == self.alien_bullet_event:
-                if self.aliens.sprites():
-                    self._fire_alien_bullet()
+            elif ((event.type == self.alien_bullet_event)
+                and self.stats.game_active):
+                self._fire_alien_bullet()
 
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks Play."""
@@ -215,6 +225,10 @@ class AlienInvasion:
         self.bullets.empty()
         self._create_fleet()
         self.settings.increase_speed()
+        
+        # Update alien bullet timer
+        
+        self._alien_bullet_timer()
 
         # Increase level.
         self.stats.level += 1
