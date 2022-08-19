@@ -221,6 +221,7 @@ class AlienInvasion:
     def _start_new_level(self):     
         """Destroy existing bullets and create new fleet."""
         self.bullets.empty()
+        self.alien_bullets.empty()
         self._create_fleet()
         self.settings.increase_speed()
         
