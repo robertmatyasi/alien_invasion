@@ -122,7 +122,6 @@ class AlienInvasion:
             # Reset the game settings.
             self.settings.initialize_dynamic_settings()
             self._start_game()
-            sounds.bullet_sounds[0].play()
     
     def _check_difficulty_buttons(self, mouse_pos):
         """Set difficulty level, shows selection."""
@@ -338,13 +337,13 @@ class AlienInvasion:
         """Place difficulty buttonsbelow play button"""
         self.medium_button.rect.top = (self.play_button.rect.bottom 
             + 2 * self.play_button.height)
-        self.medium_button.msg_image_rect.center = self.medium_button.rect.center
         
         self.easy_button.rect.topright = self.medium_button.rect.topleft
-        self.easy_button.msg_image_rect.center = self.easy_button.rect.center
 
         self.hard_button.rect.topleft = self.medium_button.rect.topright
-        self.hard_button.msg_image_rect.center = self.hard_button.rect.center
+
+        for button in self.difficulty_buttons:
+            button.msg_image_rect.center = button.rect.center
 
     def _draw_title(self):
         """Place game title above buttons."""
