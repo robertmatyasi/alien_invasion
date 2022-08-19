@@ -17,6 +17,8 @@ class Button:
             self.button_color = (0, 255, 0)
         elif color == 'gray':
             self.button_color = (200, 200, 200)
+        elif color == 'dark_gray':
+            self.button_color = (100, 100, 100)
 
         # Build the button's rect object and center it.
         self.rect = pygame.Rect(0, 0, self.width, self.height)
@@ -24,6 +26,7 @@ class Button:
         
         # The button message needs to be prepped only once.
         self._prep_msg(msg)
+        self.msg = msg
 
     def _prep_msg(self, msg):
         """Turn msg into a rendered image and center text on the button."""
@@ -36,3 +39,15 @@ class Button:
         """Draw blank button and then draw message."""
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+
+    def _change_color(self, color):
+        """Change button color."""
+        if color == 'green':
+            self.button_color = (0, 255, 0)
+        elif color == 'gray':
+            self.button_color = (200, 200, 200)
+        elif color == 'dark_gray':
+            self.button_color = (100, 100, 100)
+
+        self._prep_msg(self.msg)
+        self.draw_button()

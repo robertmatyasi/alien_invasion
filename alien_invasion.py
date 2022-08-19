@@ -7,6 +7,7 @@ from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from button import Button
+import sounds
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -38,6 +39,9 @@ class AlienInvasion:
         self.easy_button = Button(self, "Easy", 'gray')
         self.medium_button = Button(self, "Medium", 'gray')
         self.hard_button = Button(self, "Hard", 'gray')
+        self.difficulty_buttons = [
+            self.easy_button, self.medium_button, self.hard_button
+        ]
 
     def run_game(self):
         """Start the main loop for the game and load high score."""
@@ -53,6 +57,7 @@ class AlienInvasion:
 
     def _start_game(self):
         """Start the game."""
+        
         # Reset the game statistics.
         self.stats.reset_stats()
         self.stats.game_active = True
@@ -69,11 +74,14 @@ class AlienInvasion:
         # Hide the mouse cursor.
         pygame.mouse.set_visible(False)
 
+        # Stop theme song.
+        sounds.theme_song.stop()
+
     def _check_events(self):
         """Respond to keypresses and mouse events."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.sb.save_high_score()
+                self.stats.save_high_score()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -91,18 +99,21 @@ class AlienInvasion:
             # Reset the game settings.
             self.settings.initialize_dynamic_settings()
             self._start_game()
+            sounds.bullet_sound.play()
     
     def _check_difficulty_buttons(self, mouse_pos):
-        """Set difficulty level."""
-        easy_button_clicked = self.easy_button.rect.collidepoint(mouse_pos)
-        medium_button_clicked = self.medium_button.rect.collidepoint(mouse_pos)
-        hard_button_clicked = self.hard_button.rect.collidepoint(mouse_pos)
-        if easy_button_clicked and not self.stats.game_active:
-            self.settings.set_difficulty('easy')   
-        elif medium_button_clicked and not self.stats.game_active:
-            self.settings.set_difficulty('medium')
-        elif hard_button_clicked and not self.stats.game_active:
-            self.settings.set_difficulty('hard')
+        """Set difficulty level, shows selection."""
+        for button in self.difficulty_buttons:
+            button_clicked = button.rect.collidepoint(mouse_pos)
+            if button_clicked and not self.stats.game_active:
+                self.settings.set_difficulty(button.msg.lower())
+                sounds.alien_shot_sound.play()
+                self._reset_difficulty_button_colors()
+                button._change_color('dark_gray')
+
+    def _reset_difficulty_button_colors(self):
+        for button in self.difficulty_buttons:
+            button._change_color('gray')
 
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
@@ -130,6 +141,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            sounds.bullet_sound.play()
 
     def _update_bullets(self):
         """Update position of bullets and get rid of old bullets"""
@@ -155,6 +167,7 @@ class AlienInvasion:
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+            sounds.alien_shot_sound.play()
 
         # Start new level when fleet is destroyed.
 
@@ -262,18 +275,15 @@ class AlienInvasion:
         """Place play button and difficulty buttons below play button."""
         self.play_button.draw_button()
         
-        self.medium_button.draw_button()
+        for button in self.difficulty_buttons:
+            button.draw_button()
 
         self.medium_button.rect.top = (self.play_button.rect.bottom 
             + 2 * self.play_button.height)
         self.medium_button.msg_image_rect.center = self.medium_button.rect.center
         
-        self.easy_button.draw_button()
-
         self.easy_button.rect.topright = self.medium_button.rect.topleft
         self.easy_button.msg_image_rect.center = self.easy_button.rect.center
-
-        self.hard_button.draw_button()
 
         self.hard_button.rect.topleft = self.medium_button.rect.topright
         self.hard_button.msg_image_rect.center = self.hard_button.rect.center
@@ -286,8 +296,14 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
 
-        # Draw the score information
+        # Draw the score information.
         self.sb.show_score()
+
+        # Draw title.
+        if not self.stats.game_active:
+                  # Play theme song
+            while pygame.mixer.get_busy() == False:
+                sounds.theme_song.play(-1)
 
         # Draw the play and difficulty buttons if the game is inactive.
         if not self.stats.game_active:
