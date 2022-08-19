@@ -3,6 +3,8 @@ from time import sleep
 
 import pygame
 
+from random import choice
+
 from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
@@ -99,7 +101,7 @@ class AlienInvasion:
             # Reset the game settings.
             self.settings.initialize_dynamic_settings()
             self._start_game()
-            sounds.bullet_sound.play()
+            sounds.bullet_sounds[0].play()
     
     def _check_difficulty_buttons(self, mouse_pos):
         """Set difficulty level, shows selection."""
@@ -141,7 +143,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
-            sounds.bullet_sound.play()
+            choice(sounds.bullet_sounds).play()
 
     def _update_bullets(self):
         """Update position of bullets and get rid of old bullets"""
@@ -190,6 +192,9 @@ class AlienInvasion:
             # Decrement ships left, and update scoreboard.
             self.stats.ships_left -= 1
             self.sb.prep_ships()
+
+            # Play sound effect
+            sounds.ship_hit_sound.play()
 
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
@@ -248,6 +253,9 @@ class AlienInvasion:
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
+
+        # Play sound effect.
+        sounds.create_fleet_sound.play()
 
     def _create_alien(self, alien_number, row_number):
         """Create an alien and place it in the row."""
