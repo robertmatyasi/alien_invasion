@@ -326,12 +326,16 @@ class AlienInvasion:
         self.settings.fleet_direction *= -1
 
     def _draw_buttons(self):
-        """Place play button and difficulty buttons below play button."""
+        """Place play button and difficulty buttons."""
         self.play_button.draw_button()
         
         for button in self.difficulty_buttons:
             button.draw_button()
 
+        self._position_difficulty_buttons()
+
+    def _position_difficulty_buttons(self):
+        """Place difficulty buttonsbelow play button"""
         self.medium_button.rect.top = (self.play_button.rect.bottom 
             + 2 * self.play_button.height)
         self.medium_button.msg_image_rect.center = self.medium_button.rect.center
