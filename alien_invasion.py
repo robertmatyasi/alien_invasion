@@ -38,7 +38,7 @@ class AlienInvasion:
         self.play_button = Button(self, "Play")
 
         # Make difficulty buttons
-        self.easy_button = Button(self, "Easy", 'gray')
+        self.easy_button = Button(self, "Easy", 'dark_gray')
         self.medium_button = Button(self, "Medium", 'gray')
         self.hard_button = Button(self, "Hard", 'gray')
         self.difficulty_buttons = [
@@ -188,13 +188,11 @@ class AlienInvasion:
     
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
+        sounds.ship_hit_sound.play()
         if self.stats.ships_left > 0:
             # Decrement ships left, and update scoreboard.
             self.stats.ships_left -= 1
             self.sb.prep_ships()
-
-            # Play sound effect
-            sounds.ship_hit_sound.play()
 
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
@@ -320,8 +318,8 @@ class AlienInvasion:
         if not self.stats.game_active:
             self._draw_title()
 
+        # Play theme song
         if not self.stats.game_active:
-                  # Play theme song
             while pygame.mixer.get_busy() == False:
                 sounds.theme_song.play(-1)
 
