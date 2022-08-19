@@ -17,11 +17,19 @@ class Settings:
         self.bullet_color = (60, 60, 60)
         self.bullets_allowed = 3
 
+        # Alien bullet settings
+        self.alien_bullet_width = 3
+        self.alien_bullet_height = 45
+        self.alien_bullet_color = (255, 68, 68)
+
         # Alien settings
         self.fleet_drop_speed = 10
 
         # How quickly the alien point values increase
         self.score_scale = 1.5
+
+        # How quickly alien bullets appear
+        self.alien_bullet_scale = 0.9
 
         self.set_difficulty('easy')
 
@@ -45,6 +53,8 @@ class Settings:
         self.ship_speed = 1.5 * self.diff_multiplier
         self.bullet_speed = 1.5 * self.diff_multiplier
         self.alien_speed = 1.0 * self.diff_multiplier
+        self.alien_bullet_speed = 3 * self.diff_multiplier
+        self.alien_bullet_delay = 5000 # 5.0 seconds) 
 
         # Scoring
         self.alien_points = round(50 * self.diff_multiplier)
@@ -57,4 +67,6 @@ class Settings:
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
+        self.alien_bullet_speed *= self.speedup_scale
+        self.alien_bullet_delay *= self.alien_bullet_scale
         self.alien_points = int(self.alien_points * self.score_scale)
